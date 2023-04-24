@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: registryswap-webhook
+  labels:
+    app: registryswap
+    resource: mutatingwebhookconfiguration
+webhooks:
+  - name: registryswap.webhook.k8s.acc.io
+    clientConfig:
+      service:
+        name: registryswap
+        namespace: registryswap-system
+        path: "/"
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURBekNDQWV1Z0F3SUJBZ0lKQU8zWEQyTmN6SHZmTUEwR0NTcUdTSWIzRFFFQkN3VUFNQmN4RlRBVEJnTlYKQkFNTURHRmtiV2x6YzJsdmJsOWpZVEFnRncweU16QTBNalF3TWpBME1qVmFHQTh5TWprM01ESXdOakF5TURReQpOVm93RnpFVk1CTUdBMVVFQXd3TVlXUnRhWE56YVc5dVgyTmhNSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DCkFROEFNSUlCQ2dLQ0FRRUF1OGFjQk95VHlpQXFQbFhldDUyMGJPWXlOVmhuMm1ESWRiN1IvVTFINGNDOG9WWVkKV2VTaENOVVJrbHBZNzZZUFMrUTNiblFyTzZnQ2N3TExXQ0QvclY0a1BZMlpTZ2IweUg5YTVERTlSOW5MZmNOZQp0RG5pZUowSG8yREtvT0R6UlF4RDRvdTBGRWJjMXhTWThLNnFkcENlcEw1THJtM1V1K1ZwRStYRTMwZHRrV2VSCnpZUkVxNElzejVnZ1hPcFBuOTI2VVJ6UXBJZmE5NnRuL1F0emsydkVYeUhWWjlFMTM5SFJxY2s3Snl1SnFZUkUKMzY2WjlwVmw4VmlDQ3p4MVVKaTNTemx4N3M4YnQwOC91OUZRK3VVdkhwYjFWMnUvQTF4Ty9CeHV4NHNEUFJZQgpJMjhBS3NEV1RKVDE2ZTFZSk5BdzdYMktPa0FJNWEzWjF3VVV2d0lEQVFBQm8xQXdUakFkQmdOVkhRNEVGZ1FVClBUcmE5VFhXVC9UK3h5QXhsMmxtU05MOWlYUXdId1lEVlIwakJCZ3dGb0FVUFRyYTlUWFdUL1QreHlBeGwybG0KU05MOWlYUXdEQVlEVlIwVEJBVXdBd0VCL3pBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQVpLWlE5NlovMXBOUAozMmx0VHQ2KzVqa0twVWVEbG12alJvUU5xSzQ4NkNaTmVDSk1CbHYzeHBJWGlnbFZabktQWFRFQlhHaXBjWkIvClIva3U1SFFhWVBCdjJLMXY0WERoNFp2OHFjY2QreEtaQndtSHFuY1YvTnZjNUJvSmllTHdyM0JvTFpackMyWnMKQVRhaFJpeVZKYXN1OFB0MWFqQ3dZUUZ3YjExeEd1cGZQU0NQcUlEcVAxVlhFUWdGeGdVMDhvQ3dWbFpUL01PcQplSURDYVEvZm9OTk1VWVNYQnBodlF6SUhHZ3BJMWU2Y21IUDdYbnd3dndESmlxdmR5WEVtYmVkdTZNRDRwcDRRClJSZHI4THh6dHN5QmpwRFp5dU9vWkZXSCtBeTRnQ1ludjJDbHE2TnZhdzArSXdOK0NXb0YyTGdhM2JINWR1WnoKVndteEVYNzNFUT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K 
+    rules:
+      - operations:
+          - CREATE
+          - UPDATE
+        apiGroups:
+          - "*"
+        apiVersions:
+          - "*"
+        resources:
+#          - "pods"
+          - "deployments"
+          - "statefulsets"
+          - "daemonsets"
+    sideEffects: None
+    admissionReviewVersions: ["v1"]
+    failurePolicy: Fail
+    reinvocationPolicy: IfNeeded

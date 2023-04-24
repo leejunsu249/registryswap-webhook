@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registryswap
+  namespace: registryswap-system
+  labels:
+    app: registryswap
+    resource: deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registryswap
+  template:
+    metadata:
+      labels:
+        app: registryswap
+    spec:
+      serviceAccountName: registryswap-sa
+      securityContext:
+        runAsUser: 1898
+        runAsGroup: 1898
+      containers:
+      - name: imageswap
+        image: 10.60.200.124:5000/registryswap:v1
+        ports:
+        - containerPort: 5000
+        command: ["python", "-u", "registryswap.py"]
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          timeoutSeconds: 5
+        securityContext:
+            allowPrivilegeEscalation: false
+        resources:
+          limits:
+            cpu: "500m"
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
+        env:
+          - name: IMAGESWAP_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: REGISTRYSWAP_REGISTRY
+            value: "test.registry.com"
+          - name: REGISTRYSWAP_PORT
+            value: "5000"
+          - name: REGISTRYSWAP_REGISTRY_USER
+            value: "test.userregistry.com"
+          - name: REGISTRYSWAP_PORT_USER
+            value: "30001"

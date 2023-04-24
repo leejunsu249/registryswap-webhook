@@ -1,0 +1,92 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: registryswap-write
+  namespace: registryswap-system
+  labels:
+    app: registryswap
+    resource: clusterrole
+rules:
+- apiGroups:
+  - admissionregistration.k8s.io
+  - certificates.k8s.io
+  - ""
+  resources:
+    - mutatingwebhookconfigurations
+    - certificatesigningrequests
+    - certificatesigningrequests/approval
+    - certificatesigningrequests/status
+    - signers
+  verbs:
+    - get
+    - list
+    - watch
+    - create
+    - patch
+    - update
+    - delete
+    - approve
+    - sign
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: registryswap-read
+  labels:
+    app: registryswap
+    resource: clusterrole
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - management.accordions.co.kr
+  resources:
+  - registries
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: registryswap-write-crb
+  labels:
+    app: registryswap
+    resource: clusterrolebinding
+roleRef:
+  kind: ClusterRole
+  name: registryswap-write
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: registryswap-sa
+  namespace: registryswap-system
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: registryswap-read-crb
+  labels:
+    app: registryswap
+    resource: clusterrolebinding
+roleRef:
+  kind: ClusterRole
+  name: registryswap-read
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: registryswap-sa
+  namespace: registryswap-system
